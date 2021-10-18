@@ -1,4 +1,7 @@
-# w2v_intro  2021.08.20
+2021.08.20
+
+
+#### w2v_intro  
 
 create a new repository on the command line
 
