@@ -1,4 +1,4 @@
-# Введение в word2vec или использование (почти) школьной математкики для семантического анализа слов анализа 
+# Введение в word2vec или использование (почти) школьной математики для распознования смысла слов
 
 * [слайды (slides)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf)
 * [код на Колабе (python code on Colab)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb)
