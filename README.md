@@ -8,7 +8,6 @@
 
 * [код на Колабе (python code on Colab)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb)
 
-Статьи Миколова:
-
- [1] [Mikolov et al 2013.09](https://arxiv.org/pdf/1301.3781.pdf)
+Статьи Миколова:<br>
+ [1] [Mikolov et al 2013.09](https://arxiv.org/pdf/1301.3781.pdf)<br>
  [2] [Mikolov et al 2013.10](https://arxiv.org/pdf/1310.4546.pdf)
