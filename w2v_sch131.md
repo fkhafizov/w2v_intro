@@ -7,7 +7,8 @@
 
 * [слайды (slides)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf)
 * [код на Колабе (python code on Colab)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb)
-
+* [Видео лекции](https://www.youtube.com/watch?v=8BHJCK2-2ek)
+   
 Статьи Миколова:<br>
  [1] [Mikolov et al 2013.09](https://arxiv.org/pdf/1301.3781.pdf)<br>
  [2] [Mikolov et al 2013.10](https://arxiv.org/pdf/1310.4546.pdf)
