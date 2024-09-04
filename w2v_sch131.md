@@ -5,9 +5,10 @@
 <!--- * [видео.](https://youtu.be/8BHJCK2-2ek) Нажмите **SHOW MORE**, чтобы перейти к нужному разделу видео --->
 
 
-* [слайды (slides)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf)
-* [код на Колабе (python code on Colab)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb)
 * [Видео лекции](https://www.youtube.com/watch?v=8BHJCK2-2ek)
+* [Слайды (slides)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf)
+* [Код на Колабе (python code on Colab)](https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb)
+
    
 Статьи Миколова:<br>
  [1] [Mikolov et al 2013.09](https://arxiv.org/pdf/1301.3781.pdf)<br>
