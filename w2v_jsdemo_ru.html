@@ -1,0 +1,697 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Демо векторных представлений слов (Skip-gram)</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;600;700&display=swap');
+    
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      padding: 24px;
+      font-family: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #e8f4fc 0%, #d4ebf7 50%, #e0f2f9 100%);
+      min-height: 100vh;
+      color: #1a3a4a;
+    }
+    .container { max-width: 1200px; margin: 0 auto; }
+    
+    .top-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 900px) { .top-row { grid-template-columns: 1fr; } }
+    
+    .top-panel {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(148, 184, 212, 0.4);
+      display: flex;
+      flex-direction: column;
+      min-height: 180px;
+    }
+    .top-panel h3 { margin: 0 0 10px 0; font-size: 0.95rem; color: #1e3a5f; }
+    
+    .bottom-row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 20px;
+      margin-bottom: 20px;
+    }
+    @media (max-width: 700px) { .bottom-row { grid-template-columns: 1fr; } }
+    
+    h1 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      color: #0d2137;
+      margin-bottom: 8px;
+      letter-spacing: -0.02em;
+    }
+.header-row { display: flex; justify-content: space-between; align-items: baseline; gap: 16px; margin-bottom: 24px; width: 100%; flex-wrap: wrap; }
+.header-row h1 { margin: 0; }
+.header-row .subtitle { margin: 0; flex-shrink: 0; }
+.subtitle { color: #4a6b7c; font-size: 0.95rem; }
+    
+    .toolbar {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-bottom: 20px;
+    }
+    .btn {
+      padding: 10px 20px;
+      border: none;
+      border-radius: 10px;
+      font-family: inherit;
+      font-weight: 600;
+      font-size: 0.95rem;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn:active { transform: translateY(0); }
+    
+    .btn-help {
+      background: linear-gradient(145deg, #2563eb 0%, #1d4ed8 50%, #1e40af 100%);
+      color: white;
+      box-shadow: 0 4px 14px rgba(37, 99, 235, 0.4),
+                  0 2px 4px rgba(0,0,0,0.1),
+                  inset 0 1px 0 rgba(255,255,255,0.2);
+      text-shadow: 0 1px 1px rgba(0,0,0,0.2);
+      border: 1px solid rgba(255,255,255,0.2);
+    }
+    .btn-help:hover { box-shadow: 0 6px 20px rgba(37, 99, 235, 0.5); }
+    
+    .btn-start {
+      background: linear-gradient(145deg, #059669 0%, #047857 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(5, 150, 105, 0.35);
+    }
+    .btn-reset {
+      background: linear-gradient(145deg, #6b7280 0%, #4b5563 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(107, 114, 128, 0.35);
+    }
+    
+    .config-row {
+      display: flex;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 16px;
+      flex-wrap: wrap;
+    }
+    .smooth-label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #2d4a5e;
+      cursor: pointer;
+    }
+    .config-row label {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-weight: 600;
+      color: #2d4a5e;
+    }
+    .config-row input[type="number"] {
+      width: 70px;
+      padding: 6px 10px;
+      border: 1px solid #94b8d4;
+      border-radius: 6px;
+      font-size: 0.95rem;
+      background: rgba(255,255,255,0.7);
+    }
+    
+    textarea {
+      width: 100%;
+      flex: 1;
+      min-height: 140px;
+      padding: 12px 14px;
+      border: 1px solid #94b8d4;
+      border-radius: 8px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      background: rgba(255,255,255,0.85);
+      resize: vertical;
+      line-height: 1.5;
+    }
+    textarea:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+    
+    .steps-panel {
+      background: rgba(255,255,255,0.9);
+      border-radius: 12px;
+      padding: 16px;
+      margin-bottom: 20px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(148, 184, 212, 0.4);
+    }
+    .steps-panel h3 { margin: 0 0 10px 0; font-size: 0.95rem; color: #1e3a5f; }
+    .step-content {
+      font-size: 0.85rem;
+      line-height: 1.5;
+      color: #334155;
+      white-space: pre-wrap;
+      word-break: break-word;
+      flex: 1;
+      min-height: 0;
+      overflow-y: auto;
+    }
+    .step-content .cluster-red { color: #dc2626; font-weight: 600; }
+    .step-content .cluster-blue { color: #2563eb; font-weight: 600; }
+    .sentence-list { line-height: 1.25; }
+    .step3-pairs { max-height: 200px; overflow-y: auto; }
+    .pairs-two-cols { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .pairs-col { line-height: 1.3; }
+    .pairs-col h4 { margin: 0 0 6px 0; font-size: 0.9rem; }
+    .machine-warning { color: #059669; font-weight: 700; font-size: 0.9em; margin: 8px 0; }
+    .help-line {
+      background: rgba(37, 99, 235, 0.1);
+      border-left: 4px solid #2563eb;
+      padding: 12px 16px;
+      margin-bottom: 20px;
+      border-radius: 0 8px 8px 0;
+      font-weight: 600;
+      color: #1e3a5f;
+    }
+    .btn-next-step {
+      background: linear-gradient(145deg, #0891b2 0%, #0e7490 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(8, 145, 178, 0.35);
+    }
+    .btn-keep-iterating {
+      background: linear-gradient(145deg, #7c3aed 0%, #6d28d9 100%);
+      color: white;
+      box-shadow: 0 3px 10px rgba(124, 58, 237, 0.35);
+    }
+    
+    .viz-panel {
+      background: rgba(255,255,255,0.95);
+      border-radius: 12px;
+      padding: 16px;
+      box-shadow: 0 2px 12px rgba(0,0,0,0.06);
+      border: 1px solid rgba(148, 184, 212, 0.4);
+    }
+    .viz-panel h3 { margin: 0 0 12px 0; font-size: 0.95rem; color: #1e3a5f; }
+    .viz-panel canvas { display: block; border-radius: 8px; background: #f8fcff; }
+    
+    .log-panel {
+      background: rgba(30, 41, 59, 0.08);
+      border-radius: 10px;
+      padding: 14px;
+      font-family: 'SF Mono', 'Fira Code', monospace;
+      font-size: 0.8rem;
+      line-height: 1.5;
+      max-height: 150px;
+      overflow-y: auto;
+    }
+    
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(13, 33, 55, 0.6);
+      z-index: 100;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+    .modal-overlay.visible { display: flex; }
+    .modal {
+      background: white;
+      border-radius: 16px;
+      max-width: 560px;
+      max-height: 85vh;
+      overflow: hidden;
+      box-shadow: 0 24px 48px rgba(0,0,0,0.2);
+      display: flex;
+      flex-direction: column;
+    }
+    .modal-header {
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #1e40af 0%, #2563eb 100%);
+      color: white;
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+    .modal-body {
+      padding: 24px;
+      overflow-y: auto;
+      font-size: 0.95rem;
+      line-height: 1.7;
+      color: #334155;
+    }
+    .modal-body h4 { margin: 16px 0 8px 0; color: #1e3a5f; }
+    .modal-body p { margin: 0 0 12px 0; }
+    .modal-body code {
+      background: #f1f5f9;
+      padding: 2px 6px;
+      border-radius: 4px;
+      font-size: 0.9em;
+    }
+    .modal-body a { color: #2563eb; }
+    .modal-footer {
+      padding: 16px 24px;
+      border-top: 1px solid #e2e8f0;
+    }
+    .btn-close {
+      background: #2563eb;
+      color: white;
+      border: none;
+      padding: 10px 24px;
+      border-radius: 8px;
+      font-weight: 600;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="header-row">
+      <h1>Векторное представление слов (Skip-gram)</h1>
+      <p class="subtitle">Интерактивная визуализация упрощённой модели (W₁ = W₀ᵀ)</p>
+    </div>
+    
+    <div class="toolbar">
+      <button class="btn btn-help" id="btnHelp">Справка</button>
+      <button class="btn btn-reset" id="btnReset">Сброс</button>
+      <button class="btn btn-start" id="btnMain">НАЧАТЬ</button>
+      <label id="smoothLabel" class="smooth-label" style="display: none;">
+        <input type="checkbox" id="smoothCheck" checked> Плавно
+      </label>
+      <div class="config-row">
+        <label>Итераций на обновление K= <input type="number" id="iterPerStep" value="10" min="1" max="500"> </label>
+        <label>Эпохи <input type="number" id="epochs" value="3000" min="100"> </label>
+      </div>
+    </div>
+    
+    <div class="help-line" id="helpLine">Введите предложения (шаг 1). Нажмите НАЧАТЬ, когда готовы.</div>
+    
+    <div class="top-row">
+      <div class="top-panel" id="panelStep1">
+        <h3>Шаг 1. Введите текст (предложения через точку)</h3>
+        <textarea id="textInput" placeholder="Введите текст здесь...">Рыба плавает глубоко в воде. Дно океана очень глубоко. Рыба плавает в темноте. Птицы улетели в небо. Птицы летают очень высоко. В солнечный день небо чистое.</textarea>
+      </div>
+      <div class="top-panel" id="panelStep2">
+        <h3>Шаг 2: Обработка текста (удаление стоп-слов и т.д.)</h3>
+        <div class="step-content" id="step2Content"></div>
+      </div>
+      <div class="top-panel" id="panelStep3">
+        <h3>Шаг 3: Учебные пары</h3>
+        <div class="step-content step3-pairs" id="step3Content"></div>
+      </div>
+    </div>
+    
+    <div class="bottom-row">
+      <div class="viz-panel">
+        <h3>Начальное (случайное) представление</h3>
+        <canvas id="canvasInit" width="480" height="320"></canvas>
+      </div>
+      <div class="viz-panel" id="panelStep4">
+        <h3>Шаг 4: Улучшенное представление (каждые K итераций) — <span id="iterCounter">0</span> / <span id="iterTotal">3000</span></h3>
+        <canvas id="canvasImproved" width="400" height="320"></canvas>
+      </div>
+    </div>
+    
+    <div class="steps-panel">
+      <h3>Ход обучения</h3>
+      <div class="log-panel" id="logPanel"></div>
+    </div>
+  </div>
+  
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+      <div class="modal-header">Теория Skip-gram</div>
+      <div class="modal-body">
+        <h4>Как пользоваться</h4>
+        <p><strong>1.</strong> Введите предложения (через точку) в шаге 1. Нажмите <strong>НАЧАТЬ</strong>, когда готовы.</p>
+        <p><strong>2.</strong> Кнопка станет <strong>СЛЕДУЮЩИЙ ШАГ</strong>. Нажмите её, чтобы заполнить шаг 2: Обработка текста (стоп-слова удалены, предложения и словарь с цветами кластеров красный/синий).</p>
+        <p><strong>3.</strong> Нажмите <strong>СЛЕДУЮЩИЙ ШАГ</strong>, чтобы заполнить шаг 3: Учебные пары в двух столбцах (красные слева, синие справа). Машина не видит эти цвета!</p>
+        <p><strong>4.</strong> Нажмите <strong>СЛЕДУЮЩИЙ ШАГ</strong>, чтобы увидеть начальное (случайное) представление.</p>
+        <p><strong>5.</strong> Нажмите <strong>СЛЕДУЮЩИЙ ШАГ</strong>, чтобы запустить итерации и увидеть улучшенное представление. Кнопка станет <strong>ПРОДОЛЖАТЬ</strong>.</p>
+        <p><strong>6.</strong> Флажок <strong>Плавно</strong> (включён по умолчанию): при включении итерации идут непрерывно до достижения количества эпох; при выключении каждый клик выполняет K итераций один раз.</p>
+        <p><strong>7.</strong> <strong>Итераций на обновление K</strong> (по умолчанию 10): сколько эпох выполняется перед каждым обновлением экрана. <strong>Эпохи</strong> (по умолчанию 3000): общее целевое число итераций. Счётчик в шаге 4 показывает прогресс.</p>
+        <p><strong>8.</strong> <strong>Сброс</strong> останавливает процесс и очищает всё.</p>
+        <hr>
+        <h4>Обзор</h4>
+        <p>Модель Skip-gram (Mikolov et al., 2013) обучает векторные представления слов, предсказывая контекстные слова по центральному. Слова, встречающиеся в схожем контексте, получают похожие представления.</p>
+        <h4>Обозначения</h4>
+        <p>При заданном словаре <code>V</code>, размере окна <code>c</code> (например, 2) формируются учебные пары <code>(w_центр, w_контекст)</code>. <code>W₀</code> — матрица |V|×2: каждая строка — 2D-представление слова.</p>
+        <h4>Упрощённая модель (одна матрица)</h4>
+        <p>Используется <code>W₁ = W₀ᵀ</code>. Вероятность контекста <code>y</code> при центре <code>x</code>:</p>
+        <p><code>P(w_контекст|w_центр) = exp(x·y') / Σ exp(x·y'_v)</code></p>
+        <p>Максимизируется среднее логарифмическое правдоподобие по всем учебным парам.</p>
+        <h4>Кластеры</h4>
+        <p>Слова из первой половины предложений показаны <span style="color:#dc2626">красным</span>; из второй половины — <span style="color:#2563eb">синим</span>. После обучения связанные слова (рыба, плавает, воде) и (птицы, небо, летают) должны сгруппироваться.</p>
+        <h4>Литература</h4>
+        <p><a href="https://arxiv.org/abs/1301.3781" target="_blank">Mikolov et al. (2013.09)</a> · <a href="https://arxiv.org/abs/1310.4546" target="_blank">Mikolov et al. (2013.10)</a></p>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-close" id="btnClose">Закрыть</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // Russian stop words from w2v_sch131_2021_10_15.ipynb (plus common English for mixed text)
+    const STOP_WORDS = new Set(['и','он','этот','она','очень','в','in','very','are','the','to','of','is','a','and','on','will','be']);
+    const WINDOW_SIZE = 2;
+    const EMBED_DIM = 2;
+    const LEARNING_RATE = 0.001;
+    
+    // Russian default vocab from notebook (воде, высоко, глубоко, день, дно, летают, небо, океана, плавает, птицы, рыба, солнечный, темноте, улетели, чистое)
+    const DEFAULT_VOCAB_RU = ['воде','высоко','глубоко','день','дно','летают','небо','океана','плавает','птицы','рыба','солнечный','темноте','улетели','чистое'];
+    const DEFAULT_W0_RU = [
+      [0.19, 0.22], [0.09, 1.57], [-1.02,-1.48], [1.92, -0.83], [-0.27, -0.82],
+      [0.25, 0.81], [-1.34, 1.19], [1.47, -2.03], [1.55, 0.32], [-0.41, 0.48],
+      [0.77, -1.22], [1.15, -0.22], [0.3, -0.77], [0.2, 0.34], [-0.5, 0.9]
+    ];
+    
+    let state = { step: 0, vocab: [], word2idx: {}, pairs: [], colors: [], data: null, W0: [], W0Init: [], epochsDone: 0, smoothRunning: false };
+    
+    function removeStopWords(corpus) {
+      return corpus.map(s => 
+        s.split(/\s+/).filter(w => !STOP_WORDS.has(w.toLowerCase())).join(' ')
+      );
+    }
+    
+    function processText(text) {
+      const raw = text.split('.').map(s => s.trim().toLowerCase()).filter(Boolean);
+      const cleaned = removeStopWords(raw);
+      const sentences = cleaned.map(s => s.split(/\s+/).filter(Boolean)).filter(a => a.length > 0);
+      const allWords = sentences.flat();
+      const vocab = [...new Set(allWords)].sort();
+      const word2idx = Object.fromEntries(vocab.map((w, i) => [w, i]));
+      
+      const colorMap = {};
+      sentences.forEach((sent, i) => {
+        const color = i < sentences.length / 2 ? 'red' : 'blue';
+        sent.forEach(w => { if (!(w in colorMap)) colorMap[w] = color; });
+      });
+      const colors = vocab.map(w => colorMap[w] || 'gray');
+      
+      const pairs = [];
+      sentences.forEach(sent => {
+        sent.forEach((word, idx) => {
+          const start = Math.max(0, idx - WINDOW_SIZE);
+          const end = Math.min(sent.length, idx + WINDOW_SIZE + 1);
+          for (let j = start; j < end; j++) if (j !== idx) pairs.push([word, sent[j]]);
+        });
+      });
+      
+      return { raw, cleaned, sentences, vocab, word2idx, colors, pairs };
+    }
+    
+    function initW0(vocab) {
+      const n = vocab.length;
+      if (vocab.length === DEFAULT_VOCAB_RU.length && vocab.every((v,i) => v === DEFAULT_VOCAB_RU[i])) {
+        return DEFAULT_W0_RU.map(r => [...r]);
+      }
+      const W = [];
+      for (let i = 0; i < n; i++) {
+        W.push([(Math.random() - 0.5) * 2, (Math.random() - 0.5) * 2]);
+      }
+      return W;
+    }
+    
+    function softmax(arr) {
+      const max = Math.max(...arr);
+      const exp = arr.map(x => Math.exp(x - max));
+      const sum = exp.reduce((a, b) => a + b, 0);
+      return exp.map(x => x / sum);
+    }
+    
+    function trainStep(W0, pair, word2idx, lr) {
+      const [center, context] = pair;
+      const ci = word2idx[center];
+      const coi = word2idx[context];
+      const n = W0.length;
+      
+      const x = W0[ci];
+      const scores = W0.map(row => x[0]*row[0] + x[1]*row[1]);
+      const probs = softmax(scores);
+      const loss = -Math.log(probs[coi] + 1e-10);
+      
+      const gradScores = probs.map((p, i) => p - (i === coi ? 1 : 0));
+      for (let i = 0; i < n; i++) {
+        W0[i][0] -= gradScores[i] * x[0] * lr;
+        W0[i][1] -= gradScores[i] * x[1] * lr;
+      }
+      
+      return loss;
+    }
+    
+    function computeU(W0, pairs, word2idx) {
+      let U = 0;
+      for (const [center, context] of pairs) {
+        const ci = word2idx[center];
+        const coi = word2idx[context];
+        const x = W0[ci];
+        const scores = W0.map(row => x[0]*row[0] + x[1]*row[1]);
+        const probs = softmax(scores);
+        U += Math.log(probs[coi] + 1e-10);
+      }
+      return U;
+    }
+    
+    function drawEmbeddings(canvasId, W, vocab, colors) {
+      const canvas = document.getElementById(canvasId);
+      const ctx = canvas.getContext('2d');
+      const w = canvas.width, h = canvas.height;
+      const pad = 50;
+      
+      ctx.fillStyle = '#f8fcff';
+      ctx.fillRect(0, 0, w, h);
+      
+      const xs = W.map(r => r[0]), ys = W.map(r => r[1]);
+      const xMin = Math.min(...xs), xMax = Math.max(...xs);
+      const yMin = Math.min(...ys), yMax = Math.max(...ys);
+      const range = Math.max(xMax - xMin, yMax - yMin, 0.5) * 0.6;
+      const cx = (xMin + xMax) / 2, cy = (yMin + yMax) / 2;
+      const scale = Math.min((w - 2*pad) / (2*range), (h - 2*pad) / (2*range));
+      const ox = w/2, oy = h/2;
+      
+      const toScreen = (px, py) => [
+        ox + (px - cx) * scale,
+        oy - (py - cy) * scale
+      ];
+      
+      ctx.strokeStyle = '#cbd5e1';
+      ctx.lineWidth = 1;
+      const [gx0, gy0] = toScreen(0, 0);
+      ctx.beginPath();
+      ctx.moveTo(gx0, 0); ctx.lineTo(gx0, h);
+      ctx.moveTo(0, gy0); ctx.lineTo(w, gy0);
+      ctx.stroke();
+      
+      vocab.forEach((word, i) => {
+        const [sx, sy] = toScreen(W[i][0], W[i][1]);
+        ctx.fillStyle = colors[i] || '#64748b';
+        ctx.beginPath();
+        ctx.arc(sx, sy, 10, 0, Math.PI*2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+        ctx.fillStyle = colors[i] || '#475569';
+        ctx.font = 'bold 14px DM Sans, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(word, sx, sy - 18);
+      });
+    }
+    
+    function log(msg) {
+      const el = document.getElementById('logPanel');
+      el.textContent += '\n' + msg;
+      el.scrollTop = el.scrollHeight;
+    }
+    
+    function updateStep2(data) {
+      const el = document.getElementById('step2Content');
+      const half = Math.ceil(data.sentences.length / 2);
+      const sentencesHtml = data.cleaned.map((s, i) => {
+        const colorClass = i < half ? 'cluster-red' : 'cluster-blue';
+        return `<span class="${colorClass}">${i + 1}. ${s}</span>`;
+      }).join('<br>');
+      const vocabHtml = data.vocab.map((w, i) => {
+        const colorClass = data.colors[i] === 'red' ? 'cluster-red' : 'cluster-blue';
+        return `<span class="${colorClass}">${w}</span>`;
+      }).join(', ');
+      el.innerHTML = '<div class="sentence-list">' + sentencesHtml + '</div><br><strong>Словарь (слова с цветами по кластерам):</strong><br>' + vocabHtml;
+    }
+    
+    function updateStep3(data) {
+      const el = document.getElementById('step3Content');
+      const colorClass = w => data.colors[data.vocab.indexOf(w)] === 'red' ? 'cluster-red' : 'cluster-blue';
+      const vocabHtml = data.vocab.map(w => `<span class="${colorClass(w)}">${w}</span>`).join(', ');
+      const redPairs = [], bluePairs = [];
+      data.pairs.forEach((p, i) => {
+        const row = `${i + 1}. (<span class="${colorClass(p[0])}">${p[0]}</span>, <span class="${colorClass(p[1])}">${p[1]}</span>)`;
+        (data.colors[data.vocab.indexOf(p[0])] === 'red' ? redPairs : bluePairs).push(row);
+      });
+      const redHtml = redPairs.join('<br>');
+      const blueHtml = bluePairs.join('<br>');
+      el.innerHTML = `Слова для кластеризации: ${vocabHtml}<br>` +
+        `<span class="machine-warning">МАШИНА НЕ ВИДИТ ИХ ЦВЕТА !!!!</span><br><br>` +
+        `Учебные пары: ${data.pairs.length}<br>` +
+        `<div class="pairs-two-cols">` +
+        `<div class="pairs-col"><h4 class="cluster-red">Красные пары</h4>${redHtml}</div>` +
+        `<div class="pairs-col"><h4 class="cluster-blue">Синие пары</h4>${blueHtml}</div>` +
+        `</div>`;
+    }
+    
+    function setHelp(msg) {
+      document.getElementById('helpLine').textContent = msg;
+    }
+    
+    function updateIterCounter() {
+      document.getElementById('iterCounter').textContent = state.epochsDone;
+      document.getElementById('iterTotal').textContent = document.getElementById('epochs').value || 3000;
+    }
+    
+    function clearPanels() {
+      document.getElementById('step2Content').innerHTML = '';
+      document.getElementById('step3Content').innerHTML = '';
+      document.getElementById('logPanel').textContent = '';
+      ['canvasInit', 'canvasImproved'].forEach(id => {
+        const c = document.getElementById(id);
+        const ctx = c.getContext('2d');
+        ctx.fillStyle = '#f8fcff';
+        ctx.fillRect(0, 0, c.width, c.height);
+      });
+    }
+    
+    function reset() {
+      state.step = 0;
+      state.vocab = [];
+      state.pairs = [];
+      state.colors = [];
+      state.data = null;
+      state.epochsDone = 0;
+      state.smoothRunning = false;
+      const btn = document.getElementById('btnMain');
+      btn.textContent = 'НАЧАТЬ';
+      btn.className = 'btn btn-start';
+      document.getElementById('smoothLabel').style.display = 'none';
+      setHelp('Введите предложения (шаг 1). Нажмите НАЧАТЬ, когда готовы.');
+      clearPanels();
+      updateIterCounter();
+    }
+    
+    function handleMainClick() {
+      if (state.step === 0) {
+        const text = document.getElementById('textInput').value.trim();
+        if (!text) { alert('Введите текст.'); return; }
+        const data = processText(text);
+        if (data.vocab.length === 0) { alert('После удаления стоп-слов слов не осталось.'); return; }
+        state.data = data;
+        state.vocab = data.vocab;
+        state.word2idx = data.word2idx;
+        state.pairs = data.pairs;
+        state.colors = data.colors;
+        state.W0 = initW0(data.vocab);
+        state.W0Init = state.W0.map(r => [...r]);
+        state.epochsDone = 0;
+        state.step = 1;
+        const btn = document.getElementById('btnMain');
+        btn.textContent = 'СЛЕДУЮЩИЙ ШАГ';
+        btn.className = 'btn btn-next-step';
+        setHelp('Введите предложения (шаг 1). Нажмите СЛЕДУЮЩИЙ ШАГ, когда готовы.');
+        clearPanels();
+      } else if (state.step === 1) {
+        updateStep2(state.data);
+        state.step = 2;
+        setHelp('Нажмите СЛЕДУЮЩИЙ ШАГ для построения учебных пар');
+      } else if (state.step === 2) {
+        updateStep3(state.data);
+        state.step = 3;
+        setHelp('Нажмите СЛЕДУЮЩИЙ ШАГ, чтобы увидеть начальное представление');
+      } else if (state.step === 3) {
+        drawEmbeddings('canvasInit', state.W0Init, state.vocab, state.colors);
+        state.step = 4;
+        setHelp('Нажмите СЛЕДУЮЩИЙ ШАГ, чтобы увидеть улучшенное представление');
+      } else if (state.step === 4) {
+        updateIterCounter();
+        runKIterations();
+        state.step = 5;
+        const btn = document.getElementById('btnMain');
+        btn.textContent = 'ПРОДОЛЖАТЬ';
+        btn.className = 'btn btn-keep-iterating';
+        document.getElementById('smoothLabel').style.display = 'flex';
+        setHelp('Нажмите ПРОДОЛЖАТЬ для продолжения или Сброс для остановки.');
+        if (document.getElementById('smoothCheck').checked) {
+          runSmoothLoop();
+        }
+      } else if (state.step === 5) {
+        if (document.getElementById('smoothCheck').checked) {
+          runSmoothLoop();
+        } else {
+          runKIterations();
+        }
+      }
+    }
+    
+    function runKIterations() {
+      if (!state.pairs.length) return;
+      const K = parseInt(document.getElementById('iterPerStep').value, 10) || 1;
+      const maxEpochs = parseInt(document.getElementById('epochs').value, 10) || 500;
+      const W0 = state.W0.map(r => r.map(x => x));
+      const pairs = state.pairs;
+      const word2idx = state.word2idx;
+      const startEpoch = state.epochsDone || 0;
+      const toRun = Math.min(K, maxEpochs - startEpoch);
+      for (let ep = 0; ep < toRun; ep++) {
+        for (const p of pairs) trainStep(W0, p, word2idx, LEARNING_RATE);
+      }
+      state.epochsDone = startEpoch + toRun;
+      state.W0 = W0.map(r => [...r]);
+      const U = computeU(state.W0, pairs, word2idx);
+      log(`После ${state.epochsDone} эпох  U=${U.toFixed(4)}`);
+      drawEmbeddings('canvasImproved', state.W0, state.vocab, state.colors);
+      updateIterCounter();
+    }
+    
+    async function runSmoothLoop() {
+      if (!state.pairs.length || state.smoothRunning) return;
+      state.smoothRunning = true;
+      const maxEpochs = parseInt(document.getElementById('epochs').value, 10) || 500;
+      while (state.epochsDone < maxEpochs && state.smoothRunning) {
+        runKIterations();
+        if (state.epochsDone >= maxEpochs) break;
+        await new Promise(r => setTimeout(r, 16));
+      }
+      state.smoothRunning = false;
+    }
+    
+    document.getElementById('btnHelp').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.add('visible');
+    });
+    document.getElementById('btnClose').addEventListener('click', () => {
+      document.getElementById('modalOverlay').classList.remove('visible');
+    });
+    document.getElementById('modalOverlay').addEventListener('click', (e) => {
+      if (e.target === document.getElementById('modalOverlay'))
+        document.getElementById('modalOverlay').classList.remove('visible');
+    });
+    
+    document.getElementById('btnMain').addEventListener('click', handleMainClick);
+    document.getElementById('btnReset').addEventListener('click', reset);
+    
+    reset();
+    updateIterCounter();
+  </script>
+</body>
+</html>
