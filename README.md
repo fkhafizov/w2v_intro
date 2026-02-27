@@ -10,7 +10,8 @@
 
 2026.02.27
 
-w2v_jsdemo.html
+* w2v_jsdemo.html
+* w2v_jsdemo_ru.html
 
 ```
 (base)  12:12 paulpaul ~/iCloudDocs/code/w2v $  pwd
