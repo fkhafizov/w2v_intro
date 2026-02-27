@@ -1,37 +1,249 @@
-
 <!doctype html>
 <html lang="en">
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>w2v intro</title>
+    <title>word2vec intro</title>
+    <meta
+      name="description"
+      content="word2vec intro: JS demo, English notes + slides + code, Russian notes + video, and key references."
+    />
+
     <style>
-      body {
-        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
-        margin: 40px;
-        line-height: 1.5;
+      :root{
+        --text: #111827;
+        --muted: #6b7280;
+        --border: #e5e7eb;
+        --bg: #ffffff;
+        --card: #f9fafb;
+        --link: #2563eb;
+        --linkHover: #1d4ed8;
       }
-      a { font-size: 18px; }
+
+      * { box-sizing: border-box; }
+      html { scroll-behavior: smooth; }
+      body {
+        margin: 0;
+        background: var(--bg);
+        color: var(--text);
+        font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Arial, sans-serif;
+        line-height: 1.6;
+      }
+
+      .container{
+        max-width: 1200px;
+        margin: 0 auto;
+        padding: 32px 20px 40px;
+      }
+
+      header{
+        display: flex;
+        flex-wrap: wrap;
+        align-items: baseline;
+        gap: 14px 18px;
+        margin-bottom: 16px;
+      }
+
+      h1{
+        margin: 0;
+        font-size: 34px;
+        letter-spacing: -0.02em;
+      }
+
+      .subtitle{
+        margin: 0;
+        color: var(--muted);
+        font-size: 16px;
+      }
+
+      a{
+        color: var(--link);
+        text-decoration: none;
+      }
+      a:hover{ color: var(--linkHover); text-decoration: underline; }
+      a:focus-visible{
+        outline: 3px solid rgba(37,99,235,0.35);
+        outline-offset: 3px;
+        border-radius: 6px;
+      }
+
+      /* ---- horizontal layout ---- */
+      .row{
+        display: flex;
+        gap: 14px;
+        align-items: stretch;
+        overflow-x: auto;
+        padding-bottom: 6px; /* nicer scrollbar spacing */
+      }
+
+      .card{
+        flex: 0 0 360px;          /* fixed-ish width so it stays horizontal */
+        background: var(--card);
+        border: 1px solid var(--border);
+        border-radius: 14px;
+        padding: 16px 16px 14px;
+        min-height: 220px;
+      }
+
+      /* On large screens, let cards widen a bit */
+      @media (min-width: 1200px){
+        .card{ flex-basis: 380px; }
+      }
+
+      .card h2{
+        margin: 0 0 10px 0;
+        font-size: 18px;
+      }
+
+      .links{
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px 12px;
+        margin: 0;
+        padding: 0;
+        list-style: none;
+      }
+
+      .pill{
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 8px 10px;
+        border-radius: 999px;
+        border: 1px solid var(--border);
+        background: #fff;
+        font-size: 15px;
+      }
+
+      .pill code{
+        font-size: 13px;
+        color: var(--muted);
+        background: transparent;
+      }
+
+      .note{
+        margin: 10px 0 0;
+        color: var(--muted);
+        font-size: 14px;
+      }
+
+      .ru-title{
+        margin: 0 0 8px 0;
+        font-size: 16px;
+        font-weight: 700;
+      }
+
+      .ru p{
+        margin: 0 0 10px 0;
+        font-size: 14.5px;
+      }
+
+      .ru ul{
+        margin: 0 0 10px 18px;
+        padding: 0;
+      }
+
+      .ru li{
+        margin: 6px 0;
+        font-size: 14.5px;
+      }
+
+      .refs{
+        margin-top: 8px;
+        font-size: 14.5px;
+      }
+
+      footer{
+        margin-top: 16px;
+        padding-top: 12px;
+        border-top: 1px solid var(--border);
+        color: var(--muted);
+        font-size: 13px;
+      }
     </style>
   </head>
+
   <body>
-    <h1>w2v intro</h1>
+    <div class="container">
+      <header>
+        <h1>word2vec Intro</h1>
+        <p class="subtitle">Everything in one place (scroll horizontally if needed).</p>
+      </header>
 
-    <p>
-      <a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html">
-        Open the w2v JS demo
-      </a>
-    </p>
+      <main class="row" aria-label="Sections">
+        <!-- JS demo -->
+        <section class="card" aria-labelledby="demo">
+          <h2 id="demo">JS demo</h2>
+          <ul class="links">
+            <li class="pill">
+              <a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html">Open demo</a>
+              <code>w2v_jsdemo.html</code>
+            </li>
+          </ul>
+        </section>
 
-    <!-- Optional: embed it directly on the page -->
-    <h2>Embedded demo</h2>
-    <iframe
-      src="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html"
-      width="100%"
-      height="900"
-      style="border: 1px solid #ccc; border-radius: 8px;"
-      loading="lazy"
-      title="w2v JS demo"
-    ></iframe>
+        <!-- English -->
+        <section class="card" aria-labelledby="en">
+          <h2 id="en">English</h2>
+          <ul class="links">
+            <li class="pill"><a href="w2v_VTECH_20211117.md">Notes: Mathematics of word embedding</a></li>
+            <li class="pill"><a href="w2v_VTECH_2021_11_17.pdf">Slides (PDF)</a></li>
+            <li class="pill"><a href="w2v_VTECH_2021_11_15.ipynb">Code (notebook)</a></li>
+          </ul>
+          <p class="note">
+            Tip: if you want “open in Colab”, use a Colab link that points to the notebook on GitHub.
+          </p>
+        </section>
+
+        <!-- Russian (with requested text) -->
+        <section class="card ru" aria-labelledby="ru">
+          <h2 id="ru">Russian</h2>
+
+          <div class="ru-title">Введение в векторное представление слов.</div>
+
+          <p>
+            В лекции на простом примере показано, как работает алгоритм skip-gram,
+            распознающий контекстное распределение слов [2]. Для понимания алгоритма
+            достаточно школьной математики и понятия градиента (с которым старшеклассников
+            можно ознакомить на 1-2 факультативных занятиях). Из-за ограничения во времени
+            за рамками обсуждения остались negative sampling и некоторые эвристики алгоритма
+            skip-gram [2].
+          </p>
+
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=8BHJCK2-2ek">Видео лекции</a></li>
+            <li>
+              <a href="https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf">
+                Слайды (slides)
+              </a>
+            </li>
+            <li>
+              <a href="https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb">
+                Код на Колабе (python code on Colab)
+              </a>
+            </li>
+          </ul>
+
+          <div class="refs">
+            Статьи Миколова:<br />
+            [1] <a href="https://arxiv.org/pdf/1301.3781.pdf">Mikolov et al 2013.09</a><br />
+            [2] <a href="https://arxiv.org/pdf/1310.4546.pdf">Mikolov et al 2013.10</a>
+          </div>
+        </section>
+
+        <!-- References -->
+        <section class="card" aria-labelledby="refs">
+          <h2 id="refs">References</h2>
+          <ul class="links">
+            <li class="pill"><a href="https://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. (2013-09)</a></li>
+            <li class="pill"><a href="https://arxiv.org/pdf/1310.4546.pdf">Mikolov et al. (2013-10)</a></li>
+          </ul>
+        </section>
+      </main>
+
+      <footer>
+        If you prefer no horizontal scrolling, change <code>.row</code> to a grid layout.
+      </footer>
+    </div>
   </body>
 </html>
