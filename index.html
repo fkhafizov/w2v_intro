@@ -166,41 +166,33 @@
   <body>
     <div class="container">
       <header>
-        <h1>word2vec Intro</h1>
-        <p class="subtitle">Everything in one place (scroll horizontally if needed).</p>
-      </header>
-
-      <main class="row" aria-label="Sections">
-        <!-- JS demo -->
-        <section class="card" aria-labelledby="demo">
-          <h2 id="demo">JS demo</h2>
+        <h1><a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html">word2vec Intro</a></h1>
           <ul class="links">
             <li class="pill">
               <a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html">Open demo</a>
-              <code>w2v_jsdemo.html</code>
             </li>
           </ul>
-        </section>
+      </header>
 
-        <!-- English -->
-        <section class="card" aria-labelledby="en">
-          <h2 id="en">English</h2>
-          <ul class="links">
-            <li class="pill"><a href="w2v_VTECH_20211117.md">Notes: Mathematics of word embedding</a></li>
-            <li class="pill"><a href="w2v_VTECH_2021_11_17.pdf">Slides (PDF)</a></li>
-            <li class="pill"><a href="w2v_VTECH_2021_11_15.ipynb">Code (notebook)</a></li>
-          </ul>
-          <p class="note">
-            Tip: if you want “open in Colab”, use a Colab link that points to the notebook on GitHub.
+
+
+<!-- English -->
+          <h2 id="en">English. <a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html">Mathematics of word embedding</a></h2>
+          <p>
+            In the lecture, a simple example is used to show how the skip-gram algorithm works, recognizing the contextual distribution of words [2]. 
+            To understand the algorithm, high-school-level mathematics and the concept of a gradient are sufficient 
+            (and high school students can be introduced to it in 1–2 optional enrichment sessions). Due to time constraints, 
+            negative sampling and some heuristics of the skip-gram algorithm [2] were left outside the scope of the discussion.
           </p>
-        </section>
+          <ul>
+            <li><a href="https://www.youtube.com/watch?v=vDh5I_g3R8g">Video (Collin College), 2021</a></li>
+            <li><a href="https://fkhafizov/w2v_intro/w2v_VTECH_2021_11_17.pdf"> Slides (VTech), 2021  </a>  </li>
+            <li><a href="https://colab.research.google.com/github/ftk1000/1_deep_learn_class/blob/main/w2v_BUAN6382_Spring_2023.ipynb"> Python code on Colab</a> </li>
+            <!--"w2v_VTECH_2021_11_15.ipynb". "w2v_VTECH_20211117.md"-->
+          </ul>
 
-        <!-- Russian (with requested text) -->
-        <section class="card ru" aria-labelledby="ru">
-          <h2 id="ru">Russian</h2>
-
-          <div class="ru-title">Введение в векторное представление слов.</div>
-
+<!-- Russian (with requested text) -->
+          <h2 id="ru">Русский. <a href="https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html"> Введение в векторное представление слов.</a></h2>
           <p>
             В лекции на простом примере показано, как работает алгоритм skip-gram,
             распознающий контекстное распределение слов [2]. Для понимания алгоритма
@@ -211,39 +203,20 @@
           </p>
 
           <ul>
-            <li><a href="https://www.youtube.com/watch?v=8BHJCK2-2ek">Видео лекции</a></li>
-            <li>
-              <a href="https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021.10.15.pdf">
-                Слайды (slides)
-              </a>
-            </li>
-            <li>
-              <a href="https://github.com/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb">
-                Код на Колабе (python code on Colab)
-              </a>
-            </li>
+            <li><a href="https://www.youtube.com/watch?v=8BHJCK2-2ek">Видео лекции (школа 131, Казань), 2021</a></li>
+            <li><a href="https://fkhafizov/w2v_intro/w2v_sch131_2021.10.15.pdf"> Слайды  </a>  </li>
+            <li> <a href="https://colab.research.google.com/github/fkhafizov/w2v_intro/blob/main/w2v_sch131_2021_10_15.ipynb"> Код на Колабе </a> </li>
           </ul>
 
+
+        <!-- References -->
+          <h2 id="refs">References / Статьи Миколова</h2>
           <div class="refs">
-            Статьи Миколова:<br />
             [1] <a href="https://arxiv.org/pdf/1301.3781.pdf">Mikolov et al 2013.09</a><br />
             [2] <a href="https://arxiv.org/pdf/1310.4546.pdf">Mikolov et al 2013.10</a>
           </div>
-        </section>
 
-        <!-- References -->
-        <section class="card" aria-labelledby="refs">
-          <h2 id="refs">References</h2>
-          <ul class="links">
-            <li class="pill"><a href="https://arxiv.org/pdf/1301.3781.pdf">Mikolov et al. (2013-09)</a></li>
-            <li class="pill"><a href="https://arxiv.org/pdf/1310.4546.pdf">Mikolov et al. (2013-10)</a></li>
-          </ul>
-        </section>
-      </main>
 
-      <footer>
-        If you prefer no horizontal scrolling, change <code>.row</code> to a grid layout.
-      </footer>
     </div>
   </body>
 </html>
