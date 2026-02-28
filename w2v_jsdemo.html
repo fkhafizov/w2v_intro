@@ -348,7 +348,7 @@
       <div class="modal-header">Skip-gram Theory</div>
       <div class="modal-body">
         <h4>How to Use</h4>
-        <p><strong>1.</strong> Enter sentences (separated by periods) in Step 1. Press <strong>START</strong> when ready.</p>
+        <p><strong>1.</strong> Select text. Press <strong>START</strong>.</p>
         <p><strong>2.</strong> The button becomes <strong>NEXT STEP</strong>. Press it to fill Step 2: Process Text (stop words removed, sentences and vocabulary shown with red/blue cluster colors).</p>
         <p><strong>3.</strong> Press <strong>NEXT STEP</strong> again to fill Step 3: Training Pairs in two columns (red pairs left, blue pairs right). The machine does not see these colors!</p>
         <p><strong>4.</strong> Press <strong>NEXT STEP</strong> to see the Initial (random) embedding.</p>
@@ -356,6 +356,27 @@
         <p><strong>6.</strong> <strong>Smooth</strong> checkbox (on by default): when checked, iterations run continuously until Epochs is reached; when off, each click runs K iterations once.</p>
         <p><strong>7.</strong> <strong>Iterations per UPDATE K</strong> (default 10): how many epochs run before each display update. <strong>Epochs</strong> (default 3000): total target iterations. The counter in Step 4 shows progress.</p>
         <p><strong>8.</strong> <strong>RESET</strong> stops the process and clears everything.</p>
+        <hr>
+        <h4>How to Enter Your Own Text</h4>
+        <p>Select one of presets A–G — or type your own text in the field below the buttons. Separate sentences with periods. After entering, press <strong>START</strong>.</p>
+        <p>Try giving the AI this prompt:</p>
+        <pre style="background:#f1f5f9;padding:12px;border-radius:6px;font-size:0.85rem;overflow-x:auto;">Come up with 5 variants of text with six short sentences each.
+Three on one topic and three on another. For example,
+
+A) "Fish swim in deep water.
+Ocean is very deep.
+Fish swim in darkness.
+Birds are high in the sky.
+Birds fly very high.
+On a sunny day the sky is full of light."
+
+B) "Where does childhood go.
+How young we were.
+The years go by, yet we're still young.
+Fashion isn't what it used to be.
+You can't forbid dressing well.
+You're not dressed for the season."</pre>
+        <p>Press <strong>RESET</strong>. Delete the text and enter your own. Then press <strong>START</strong>, <strong>NEXT STEP</strong>, etc.</p>
         <hr>
         <h4>Overview</h4>
         <p>The Skip-gram model (Mikolov et al., 2013) learns word embeddings by predicting context words from a center word. Words that appear in similar contexts get similar embeddings.</p>
@@ -367,6 +388,7 @@
         <p>We maximize the average log-likelihood over all training pairs.</p>
         <h4>Clusters</h4>
         <p>Words from the first half of sentences are shown in <span style="color:#dc2626">red</span>; words from the second half in <span style="color:#2563eb">blue</span>. After training, related words (fish, swim, water) and (birds, sky, fly) should cluster together.</p>
+        <p><em>Note:</em> when repeating the experiment with the same text, the partition occurs, but not identically.</p>
         <h4>References</h4>
         <p><a href="https://arxiv.org/abs/1301.3781" target="_blank">Mikolov et al. (2013.09)</a> · <a href="https://arxiv.org/abs/1310.4546" target="_blank">Mikolov et al. (2013.10)</a></p>
       </div>
