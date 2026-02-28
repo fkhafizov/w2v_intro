@@ -131,6 +131,11 @@
       background: rgba(255,255,255,0.7);
     }
     
+    .text-presets { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .preset-label { font-weight: 600; color: #2d4a5e; font-size: 0.9rem; }
+    .btn-preset { padding: 6px 14px; font-size: 0.9rem; background: #e2e8f0; color: #334155; border: 1px solid #94b8d4; }
+    .btn-preset:hover { background: #cbd5e1; }
+    
     textarea {
       width: 100%;
       flex: 1;
@@ -301,7 +306,16 @@
     
     <div class="top-row">
       <div class="top-panel" id="panelStep1">
-        <h3>Шаг 1. Введите текст (предложения через точку)</h3>
+        <h3>Шаг 1. Выберите текст</h3>
+        <div class="text-presets">
+          <button type="button" class="btn btn-preset" data-preset="A">A</button>
+          <button type="button" class="btn btn-preset" data-preset="B">B</button>
+          <button type="button" class="btn btn-preset" data-preset="C">C</button>
+          <button type="button" class="btn btn-preset" data-preset="D">D</button>
+          <button type="button" class="btn btn-preset" data-preset="E">E</button>
+          <button type="button" class="btn btn-preset" data-preset="F">F</button>
+          <button type="button" class="btn btn-preset" data-preset="G">G</button>
+        </div>
         <textarea id="textInput" placeholder="Введите текст здесь...">Рыба плавает глубоко в воде. Дно океана очень глубоко. Рыба плавает в темноте. Птицы улетели в небо. Птицы летают очень высоко. В солнечный день небо чистое.</textarea>
       </div>
       <div class="top-panel" id="panelStep2">
@@ -378,6 +392,16 @@
       [0.25, 0.81], [-1.34, 1.19], [1.47, -2.03], [1.55, 0.32], [-0.41, 0.48],
       [0.77, -1.22], [1.15, -0.22], [0.3, -0.77], [0.2, 0.34], [-0.5, 0.9]
     ];
+    
+    const TEXT_PRESET_A = "Рыба плавает глубоко в воде. Дно океана очень глубоко. Рыба плавает в темноте. Птицы улетели в небо. Птицы летают очень высоко. В солнечный день небо чистое.";
+    const TEXT_PRESET_B = "Куда уходит детство. Как молоды мы были. Идут года а мы всё молоды. Нынче мода не та. Красиво одеваться не запретишь. Ты одет не по сезону.";
+    const TEXT_PRESETS = {
+      'C': "Лес шумит тихо. Тропинка мокрая. Грибы прячутся под мхом. Поезд гудит вдали. Рельсы блестят. Дорога тянется долго.",
+      'D': "Дождь стучит по стеклу. Город серый. Лужи растут быстро. Кофе пахнет сильно. Утро начинается рано. Сахар тает в кружке.",
+      'E': "Числа бегут в строке. Формула проста. Ошибка прячется в знаке. Музыка звучит ровно. Ритм держит шаг. Тишина тоже песня.",
+      'F': "Волны бьют о берег. Песок холодный. Море дышит медленно. Книга раскрыта. Страницы шуршат. Сюжет уводит далеко.",
+      'G': "Снег падает мягко. Двор белеет. Ветер свистит резко. Друзья звонят вечером. Встреча греет. Разговор длится долго."
+    };
     
     let state = { step: 0, vocab: [], word2idx: {}, pairs: [], colors: [], data: null, W0: [], W0Init: [], epochsDone: 0, smoothRunning: false };
     
@@ -689,6 +713,14 @@
     
     document.getElementById('btnMain').addEventListener('click', handleMainClick);
     document.getElementById('btnReset').addEventListener('click', reset);
+    
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = btn.dataset.preset;
+        const text = p === 'A' ? TEXT_PRESET_A : p === 'B' ? TEXT_PRESET_B : TEXT_PRESETS[p] || '';
+        if (text) document.getElementById('textInput').value = text;
+      });
+    });
     
     reset();
     updateIterCounter();
