@@ -129,6 +129,11 @@
       background: rgba(255,255,255,0.7);
     }
     
+    .text-presets { display: flex; align-items: center; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
+    .btn-preset { padding: 6px 14px; font-size: 0.9rem; background: #e2e8f0; color: #334155; border: 1px solid #94b8d4; }
+    .btn-preset:hover { background: #cbd5e1; }
+    .btn-preset.selected { background: #059669; color: white; border-color: #047857; }
+    
     textarea {
       width: 100%;
       flex: 1;
@@ -299,7 +304,16 @@
     
     <div class="top-row">
       <div class="top-panel" id="panelStep1">
-        <h3>Step 1. Enter text (sentences separated by periods)</h3>
+        <h3>Step 1. Select text</h3>
+        <div class="text-presets">
+          <button type="button" class="btn btn-preset" data-preset="A">A</button>
+          <button type="button" class="btn btn-preset" data-preset="B">B</button>
+          <button type="button" class="btn btn-preset" data-preset="C">C</button>
+          <button type="button" class="btn btn-preset" data-preset="D">D</button>
+          <button type="button" class="btn btn-preset" data-preset="E">E</button>
+          <button type="button" class="btn btn-preset" data-preset="F">F</button>
+          <button type="button" class="btn btn-preset" data-preset="G">G</button>
+        </div>
         <textarea id="textInput" placeholder="Enter your text here...">Fish swim in deep water. Ocean is very deep. Fish swim in darkness. Birds are high in the sky. Birds fly very high. On a sunny day the sky is full of light.</textarea>
       </div>
       <div class="top-panel" id="panelStep2">
@@ -375,6 +389,16 @@
       [0.3, -0.77], [0.2, 0.34]
     ];
     const DEFAULT_VOCAB = ['birds','darkness','day','deep','fish','fly','full','high','light','ocean','sky','sunny','swim','water'];
+    
+    const TEXT_PRESET_A = "Fish swim in deep water. Ocean is very deep. Fish swim in darkness. Birds are high in the sky. Birds fly very high. On a sunny day the sky is full of light.";
+    const TEXT_PRESET_B = "Where does childhood go. How young we were. The years go by, yet we're still young. Fashion isn't what it used to be. You can't forbid dressing well. You're not dressed for the season.";
+    const TEXT_PRESETS = {
+      'C': "The forest rustles quietly. The path is wet. Mushrooms hide under the moss. The train honks in the distance. The rails shine. The road stretches far.",
+      'D': "Rain taps on the window. The city is gray. Puddles grow quickly. Coffee smells strong. Morning starts early. Sugar melts in the mug.",
+      'E': "Numbers run across the line. The formula is simple. The error hides in the sign. Music sounds steady. The rhythm keeps the pace. Silence is also a song.",
+      'F': "Waves hit the shore. The sand is cold. The sea breathes slowly. The book is open. The pages rustle. The plot carries you far away.",
+      'G': "Snow falls softly. The yard turns white. The wind whistles sharply. Friends call in the evening. The meeting warms you. The conversation lasts long."
+    };
     
     let state = { step: 0, vocab: [], word2idx: {}, pairs: [], colors: [], data: null, W0: [], W0Init: [], epochsDone: 0, smoothRunning: false };
     
@@ -583,6 +607,7 @@
       btn.textContent = 'START';
       btn.className = 'btn btn-start';
       document.getElementById('smoothLabel').style.display = 'none';
+      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('selected'));
       setHelp('Enter sentences (STEP1). Press START when ready.');
       clearPanels();
       updateIterCounter();
@@ -687,8 +712,21 @@
     document.getElementById('btnMain').addEventListener('click', handleMainClick);
     document.getElementById('btnReset').addEventListener('click', reset);
     
+    document.querySelectorAll('.btn-preset').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const p = btn.dataset.preset;
+        const text = p === 'A' ? TEXT_PRESET_A : p === 'B' ? TEXT_PRESET_B : TEXT_PRESETS[p] || '';
+        if (text) {
+          document.getElementById('textInput').value = text;
+          document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        }
+      });
+    });
+    
     reset();
     updateIterCounter();
+    document.querySelector('.btn-preset[data-preset="A"]')?.classList.add('selected');
   </script>
 </body>
 </html>

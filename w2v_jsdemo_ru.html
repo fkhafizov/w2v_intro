@@ -135,6 +135,7 @@
     .preset-label { font-weight: 600; color: #2d4a5e; font-size: 0.9rem; }
     .btn-preset { padding: 6px 14px; font-size: 0.9rem; background: #e2e8f0; color: #334155; border: 1px solid #94b8d4; }
     .btn-preset:hover { background: #cbd5e1; }
+    .btn-preset.selected { background: #059669; color: white; border-color: #047857; }
     
     textarea {
       width: 100%;
@@ -610,6 +611,7 @@
       btn.textContent = 'НАЧАТЬ';
       btn.className = 'btn btn-start';
       document.getElementById('smoothLabel').style.display = 'none';
+      document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('selected'));
       setHelp('Введите предложения (шаг 1). Нажмите НАЧАТЬ, когда готовы.');
       clearPanels();
       updateIterCounter();
@@ -718,12 +720,17 @@
       btn.addEventListener('click', () => {
         const p = btn.dataset.preset;
         const text = p === 'A' ? TEXT_PRESET_A : p === 'B' ? TEXT_PRESET_B : TEXT_PRESETS[p] || '';
-        if (text) document.getElementById('textInput').value = text;
+        if (text) {
+          document.getElementById('textInput').value = text;
+          document.querySelectorAll('.btn-preset').forEach(b => b.classList.remove('selected'));
+          btn.classList.add('selected');
+        }
       });
     });
     
     reset();
     updateIterCounter();
+    document.querySelector('.btn-preset[data-preset="A"]')?.classList.add('selected');
   </script>
 </body>
 </html>
