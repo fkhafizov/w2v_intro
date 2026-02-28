@@ -1,5 +1,11 @@
 # word2vec Intro
 
+* https://fkhafizov.github.io/w2v_intro/
+* https://fkhafizov.github.io/w2v_intro/w2v_jsdemo.html
+* https://fkhafizov.github.io/w2v_intro/w2v_jsdemo_ru.html
+* https://www.youtube.com/watch?v=8BHJCK2-2ek
+
+  
 * ENGLISH: [Mathematics of word embedding.](w2v_VTECH_20211117.md)
 * RUSSIAN: [Введение в векторное представление слов.](w2v_sch131.md)
 
