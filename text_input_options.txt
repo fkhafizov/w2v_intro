@@ -1,0 +1,159 @@
+Спасибо за подсказку. 
+Я тестировал лишь на примерах по три коротких предложения на две темы. 
+Расширять на другие опции не пробовал. Может позже попробую, когда будет время. 
+Да вы и сами можете пробовать. ИИ это позволяет делать, не зная как кодировать.
+
+Попробуй дать вот такое задание ИИ: 
+```придумай 5 вариантов текста по шесть коротких предложений. 
+Три на одну тему и три на другую. Например,
+
+А) "Рыба плавает глубоко в воде. 
+Дно океана очень глубоко. 
+Рыба плавает в темноте. 
+Птицы улетели в небо. 
+Птицы летают очень высоко. 
+В солнечный день небо чистое." 
+
+Б) "Куда уходит детство. 
+Как молоды мы были. 
+Идут года а мы всё молоды. 
+Нынче мода не та. 
+Красиво одеваться не запретишь. 
+Ты одет не по сезону."
+```
+
+
+
+Варианты текста теперь помечены буквами A–G:
+A — рыба/птицы
+B — детство/мода
+C — лес/поезд
+D — дождь/кофе
+E — числа/музыка
+F — волны/книга
+G — снег/друзья
+
+A:
+Куда уходит детство. 
+Как молоды мы были. 
+Идут года а мы всё молоды. 
+Нынче мода не та. 
+Красиво одеваться не запретишь. 
+Ты одет не по сезону.
+
+B:
+Лес шумит тихо. 
+Тропинка мокрая. 
+Грибы прячутся под мхом. 
+Поезд гудит вдали. 
+Рельсы блестят. 
+Дорога тянется долго.
+
+C:
+Куда уходит детство. 
+Как молоды мы были. 
+Идут года а мы всё молоды. 
+Нынче мода не та. 
+Красиво одеваться не запретишь. 
+Ты одет не по сезону.
+
+D:
+Дождь стучит по стеклу. 
+Город серый. 
+Лужи растут быстро. 
+Кофе пахнет сильно. 
+Утро начинается рано. 
+Сахар тает в кружке.
+
+E:
+Числа бегут в строке. 
+Формула проста. 
+Ошибка прячется в знаке. 
+Музыка звучит ровно. 
+Ритм держит шаг. 
+Тишина тоже песня.
+
+F:
+Волны бьют о берег. 
+Песок холодный. 
+Море дышит медленно. 
+Книга раскрыта. 
+Страницы шуршат. 
+Сюжет уводит далеко.
+
+G:
+Снег падает мягко. 
+Двор белеет. 
+Ветер свистит резко. 
+Друзья звонят вечером. 
+Встреча греет. 
+Разговор длится долго.
+
+
+
+
+Тексты для каждой кнопки:
+A — fish, birds, sky
+B — childhood, fashion, dressing
+C — forest, path, train, rails
+D — rain, city, coffee, morning
+E — numbers, formula, music, rhythm
+F — waves, sand, sea, book
+G — snow, wind, friends, meeting
+
+
+A:
+Fish swim in deep water. 
+Ocean is very deep. 
+Fish swim in darkness. 
+Birds are high in the sky. 
+Birds fly very high. 
+On a sunny day the sky is full of light.
+
+B:
+Where does childhood go? 
+How young we were. 
+The years go by, yet we’re still young. 
+Fashion isn’t what it used to be. 
+You can’t forbid dressing well. 
+You’re not dressed for the season.
+
+C:
+The forest rustles quietly. 
+The path is wet. 
+Mushrooms hide under the moss. 
+The train honks in the distance. 
+The rails shine. 
+The road stretches far.
+
+D:
+Rain taps on the window. 
+The city is gray. 
+Puddles grow quickly. 
+Coffee smells strong. 
+Morning starts early. 
+Sugar melts in the mug.
+
+E:
+Numbers run across the line. 
+The formula is simple. 
+The error hides in the sign. 
+Music sounds steady. 
+The rhythm keeps the pace. 
+Silence is also a song.
+
+F:
+Waves hit the shore. 
+The sand is cold. 
+The sea breathes slowly. 
+The book is open. 
+The pages rustle. 
+The plot carries you far away.
+
+G:
+Snow falls softly. 
+The yard turns white. 
+The wind whistles sharply. 
+Friends call in the evening. 
+The meeting warms you. 
+The conversation lasts long.
